@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if users|length == 0 %}
+  <h3>Sorry, no users found</h3>
+{% else %}
+  <div class="row justify-content-end">
+    <div class="col-sm-9">
+      <div class="row">
+        {% for user in users %}
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="card user-card">
+            <div class="card-inner">
+              <div class="image-wrapper">
+                <img src="{{ url_for('static', filename='images/warbler-hero.jpg') }}" alt="" class="card-hero">
+              </div>
+              <div class="card-contents">
+                <a href="{{ url_for('users_show', user_id=user.id) }}" class="card-link">
+                  <img src="{{ user.image_url }}" alt="Image for {{ user.username }}" class="card-image">
+                  <p>@{{ user.username }}</p>
+                </a>
+                {% if current_user.is_authenticated %}
+                  {% if current_user.is_following(user) %}
+                  <form method="POST" action="{{url_for('followers_destroy', follower_id=user.id)}}?_method=DELETE">
+                    <input type="submit" value="Unfollow" class="btn btn-primary btn-sm">
+                  </form>
+                  {% else %}
+                  <form method="POST" action="{{url_for('followers_create', follower_id=user.id)}}">
+                    <input type="submit" value="Follow" class="btn btn-outline-primary btn-sm">
+                  </form>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

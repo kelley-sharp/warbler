@@ -1,0 +1,33 @@
+{% extends 'user_page.html' %}
+{% block user_details %}
+<div class="col-sm-9">
+  <div class="row">
+    {% for followee in user.following %}
+    <div class="col-lg-4 col-md-6 col-12">
+      <div class="card user-card">
+        <div class="card-inner">
+          <div class="image-wrapper">
+            <img src="{{ url_for('static', filename='images/warbler-hero.jpg') }}" alt="" class="card-hero">
+          </div>
+          <div class="card-contents">
+            <a href="{{ url_for('users_show', user_id=followee.id) }}" class="card-link">
+              <img src="{{ followee.image_url }}" alt="Image for {{ followee.username }}" class="card-image">
+              <p>@{{ followee.username }}</p>
+            </a>
+            {% if current_user.is_following(followee) %}
+            <form method="POST" action="{{url_for('followers_destroy', follower_id=followee.id)}}?_method=DELETE">
+              <input type="submit" value="Unfollow" class="btn btn-primary btn-sm">
+            </form>
+            {% else %}
+            <form method="POST" action="{{url_for('followers_create', follower_id=followee.id)}}">
+              <input type="submit" value="Follow" class="btn btn-outline-primary btn-sm">
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
