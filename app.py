@@ -71,6 +71,13 @@ def users_create():
                 password=User.hash_password(form.password.data))
             if form.image_url.data:
                 new_user.image_url = form.image_url.data
+            if form.bio.data:
+                new_user.bio = form.bio.data
+            if form.location.data:
+                new_user.location = form.location.data
+            if form.header_image_url.data:
+                new_user.header_image_url = form.header_image_url.data
+
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user)
