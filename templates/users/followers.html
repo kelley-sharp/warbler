@@ -7,7 +7,7 @@
       <div class="card user-card">
         <div class="card-inner">
           <div class="image-wrapper">
-            <img src="{{ url_for('static', filename='images/warbler-hero.jpg') }}" alt="" class="card-hero">
+            <img src="{{ follower.header_image_url }}" alt="" class="card-hero">
           </div>
           <div class="card-contents">
             <a href="{{ url_for('users_show', user_id=follower.id) }}" class="card-link">
