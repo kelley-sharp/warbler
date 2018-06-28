@@ -2,6 +2,23 @@ from datetime import datetime
 from app import db, bcrypt
 from flask_login import UserMixin
 
+FollowersFollowee = db.Table(
+    'follows', db.Column('id', db.Integer, primary_key=True),
+    db.Column('followee_id', db.Integer,
+              db.ForeignKey('users.id', ondelete="cascade")),
+    db.Column('follower_id', db.Integer,
+              db.ForeignKey('users.id', ondelete="cascade")),
+    db.CheckConstraint('follower_id != followee_id', name="no_self_follow"))
+
+MessageLikes = db.Table(
+    'likes',
+    db.Column('id', db.Integer, primary_key=True),
+    db.Column('message_id', db.Integer,
+              db.ForeignKey('messages.id', ondelete="cascade")),
+    db.Column('user_id', db.Integer,
+              db.ForeignKey('users.id', ondelete="cascade")),
+)
+
 
 class Message(db.Model):
 
@@ -12,15 +29,11 @@ class Message(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow())
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.id', ondelete='CASCADE'))
-
-
-FollowersFollowee = db.Table(
-    'follows', db.Column('id', db.Integer, primary_key=True),
-    db.Column('followee_id', db.Integer,
-              db.ForeignKey('users.id', ondelete="cascade")),
-    db.Column('follower_id', db.Integer,
-              db.ForeignKey('users.id', ondelete="cascade")),
-    db.CheckConstraint('follower_id != followee_id', name="no_self_follow"))
+    liked_by = db.relationship(
+        "User",
+        secondary=MessageLikes,
+        backref=db.backref('liked_messages', lazy='dynamic'),
+        lazy='dynamic')
 
 
 class User(db.Model, UserMixin):

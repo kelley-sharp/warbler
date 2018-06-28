@@ -33,6 +33,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from models import User, Message
+db.create_all()
 
 
 @login_manager.user_loader
@@ -226,7 +227,32 @@ def messages_new(user_id):
 @app.route('/users/<int:user_id>/messages/<int:message_id>', methods=["GET"])
 def messages_show(user_id, message_id):
     found_message = Message.query.get(message_id)
-    return render_template('messages/show.html', message=found_message)
+    i_like_this = False
+    likers = [u.id for u in found_message.liked_by]
+    if current_user.id in likers:
+        i_like_this = True
+    return render_template(
+        'messages/show.html', message=found_message, liked=i_like_this)
+
+
+@app.route('/users/<int:user_id>/messages/<int:message_id>/toggle_like')
+@login_required
+def toggle_like(user_id, message_id):
+    # liked_by = User.query.get(user_id)
+    current_message = Message.query.get(message_id)
+    # get likers (ids of users in message.liked_by)
+    likers = [u.id for u in current_message.liked_by]
+    if current user id is in likers, then remove it
+    if current_user.id in likers:
+        # else add them to likers
+        db.session.delete(current_user)
+        db.session.commit()
+    else:
+        current_message.liked_by.append(current_user)
+        db.session.add(current_message)
+        db.session.commit()
+    return redirect(
+        url_for('messages_show', message_id=message_id, user_id=user_id))
 
 
 @app.route(
@@ -247,11 +273,9 @@ def root():
 
         list_ids = [u.id for u in current_user.following]
         list_ids.append(current_user.id)
-        print("show me the LIST!", list_ids)
-# SELECT text, timestamp FROM messages WHERE message.user_id IN list_ids
 
-    messages = Message.query.filter(Message.id.in_(list_ids)).order_by(
-        Message.timestamp.desc()).limit(100)
+        messages = Message.query.filter(Message.id.in_(list_ids)).order_by(
+            Message.timestamp.desc()).limit(100)
     # query the messages where message.user_id IN list_ids
 
     return render_template('home.html', messages=messages)
