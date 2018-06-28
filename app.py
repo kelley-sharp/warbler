@@ -241,11 +241,12 @@ def toggle_like(user_id, message_id):
     # liked_by = User.query.get(user_id)
     current_message = Message.query.get(message_id)
     # get likers (ids of users in message.liked_by)
-    likers = [u.id for u in current_message.liked_by]
-    if current user id is in likers, then remove it
-    if current_user.id in likers:
+    likers = list(current_message.liked_by)
+
+    if current_user in likers:
         # else add them to likers
-        db.session.delete(current_user)
+        current_message.liked_by.remove(current_user)
+        db.session.add(current_message)
         db.session.commit()
     else:
         current_message.liked_by.append(current_user)
