@@ -164,7 +164,17 @@ def users_edit(user_id):
     return render_template(
         'users/edit.html',
         form=UserForm(obj=found_user),
-        user_id=found_user.id)
+        user_id=found_user.id,
+    )
+
+
+# username = StringField('Username', validators=[DataRequired()])
+#     email = StringField('E-mail', validators=[DataRequired(), Email()])
+#     password = PasswordField('Password', validators=[Length(min=6)])
+#     image_url = StringField('(Optional) Profile Image URL')
+#     header_image_url = StringField('(Optional) Header Image URL')
+#     bio = StringField('(Optional) bio')
+#     location = StringField('(Optional) location')
 
 
 @app.route('/users/<int:user_id>', methods=["PATCH"])
@@ -178,6 +188,9 @@ def users_update(user_id):
             found_user.username = form.username.data
             found_user.email = form.email.data
             found_user.image_url = form.image_url.data or "/static/images/default-pic.png"
+            found_user.location = form.location.data
+            found_user.bio = form.bio.data
+            found_user.header_image_url = form.header_image_url.data
             db.session.add(found_user)
             db.session.commit()
             return redirect(url_for('users_show', user_id=user_id))
