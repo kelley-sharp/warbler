@@ -168,15 +168,6 @@ def users_edit(user_id):
     )
 
 
-# username = StringField('Username', validators=[DataRequired()])
-#     email = StringField('E-mail', validators=[DataRequired(), Email()])
-#     password = PasswordField('Password', validators=[Length(min=6)])
-#     image_url = StringField('(Optional) Profile Image URL')
-#     header_image_url = StringField('(Optional) Header Image URL')
-#     bio = StringField('(Optional) bio')
-#     location = StringField('(Optional) location')
-
-
 @app.route('/users/<int:user_id>', methods=["PATCH"])
 @login_required
 @ensure_correct_user
@@ -253,9 +244,20 @@ def messages_destroy(user_id, message_id):
 def root():
     messages = []
     if current_user.is_authenticated:
-        messages = Message.query.order_by(
-            Message.timestamp.desc()).limit(100).all()
+
+        list_ids = [u.id for u in current_user.following]
+        list_ids.append(current_user.id)
+        print("show me the LIST!", list_ids)
+# SELECT text, timestamp FROM messages WHERE message.user_id IN list_ids
+
+    messages = Message.query.filter(Message.id.in_(list_ids)).order_by(
+        Message.timestamp.desc()).limit(100)
+    # query the messages where message.user_id IN list_ids
+
     return render_template('home.html', messages=messages)
+
+    #  message_ids = [int(num) for num in request.form.getlist("messages")]
+    # new_tag.messages = Message.query.filter(Message.id.in_(message_ids))
 
 
 # https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
