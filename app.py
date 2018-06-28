@@ -71,6 +71,13 @@ def users_create():
                 password=User.hash_password(form.password.data))
             if form.image_url.data:
                 new_user.image_url = form.image_url.data
+            if form.bio.data:
+                new_user.bio = form.bio.data
+            if form.location.data:
+                new_user.location = form.location.data
+            if form.header_image_url.data:
+                new_user.header_image_url = form.header_image_url.data
+
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user)
@@ -157,7 +164,8 @@ def users_edit(user_id):
     return render_template(
         'users/edit.html',
         form=UserForm(obj=found_user),
-        user_id=found_user.id)
+        user_id=found_user.id,
+    )
 
 
 @app.route('/users/<int:user_id>', methods=["PATCH"])
@@ -171,6 +179,9 @@ def users_update(user_id):
             found_user.username = form.username.data
             found_user.email = form.email.data
             found_user.image_url = form.image_url.data or "/static/images/default-pic.png"
+            found_user.location = form.location.data
+            found_user.bio = form.bio.data
+            found_user.header_image_url = form.header_image_url.data
             db.session.add(found_user)
             db.session.commit()
             return redirect(url_for('users_show', user_id=user_id))
@@ -233,9 +244,20 @@ def messages_destroy(user_id, message_id):
 def root():
     messages = []
     if current_user.is_authenticated:
-        messages = Message.query.order_by(
-            Message.timestamp.desc()).limit(100).all()
+
+        list_ids = [u.id for u in current_user.following]
+        list_ids.append(current_user.id)
+        print("show me the LIST!", list_ids)
+# SELECT text, timestamp FROM messages WHERE message.user_id IN list_ids
+
+    messages = Message.query.filter(Message.id.in_(list_ids)).order_by(
+        Message.timestamp.desc()).limit(100)
+    # query the messages where message.user_id IN list_ids
+
     return render_template('home.html', messages=messages)
+
+    #  message_ids = [int(num) for num in request.form.getlist("messages")]
+    # new_tag.messages = Message.query.filter(Message.id.in_(message_ids))
 
 
 # https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
@@ -250,3 +272,9 @@ def add_header(r):
     r.headers["Expires"] = "0"
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+
+    return render_template('404.html'), 404

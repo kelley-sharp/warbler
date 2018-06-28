@@ -7,12 +7,11 @@
       <div class="card user-card">
         <div class="card-inner">
           <div class="image-wrapper">
-            <img src="{{ url_for('static', filename='images/warbler-hero.jpg') }}" alt="" class="card-hero">
+            <img src="{{ follower.header_image_url }}" alt="" class="card-hero">
           </div>
           <div class="card-contents">
             <a href="{{ url_for('users_show', user_id=follower.id) }}" class="card-link">
               <img src="{{ follower.image_url }}" alt="Image for {{ follower.username }}" class="card-image">
-              <p>@{{ follower.username }}</p>
             </a>
             {% if current_user.is_following(follower) %}
             <form method="POST" action="{{url_for('followers_destroy', follower_id=follower.id)}}?_method=DELETE">
@@ -24,8 +23,15 @@
             </form>
             {% endif %}
           </div>
+          <div class="custom-inner-card">
+              <ul>
+                 <li><a href="{{ url_for('users_show', user_id=follower.id) }}" class="card-link">@{{ follower.username }}</a></li>
+                 <li><i class="fas fa-user"></i> {{ follower.bio }}</li>
+               </ul>
+             </div>
         </div>
       </div>
+        
     </div>
     {% endfor %}
   </div>
