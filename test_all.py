@@ -11,7 +11,7 @@ class WarblerIntegrationTestCase(unittest.TestCase):
         # test for 404 status code
         self.assertEqual(result.status_code, 404)
         # test for jinja template rendered
-        self.assertIn(b'<h1>WRONG PAGE BOZO!</h1>', result.data)
+        self.assertIn(b'LOOK OUT!!!', result.data)
 
 
 if __name__ == '__main__':
