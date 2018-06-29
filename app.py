@@ -32,7 +32,7 @@ login_manager = LoginManager(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from models import User, Message
+from models import User, Message, MessageLikes
 db.create_all()
 
 
@@ -140,23 +140,30 @@ def followers_destroy(follower_id):
 @app.route('/users/<int:user_id>/following', methods=['GET'])
 @login_required
 def users_following(user_id):
+    found_user = User.query.get(user_id)
+    total_likes = found_user.total_likes()
     return render_template(
-        'users/following.html', user=User.query.get(user_id))
+        'users/following.html', user=found_user, total_likes=total_likes)
 
 
 @app.route('/users/<int:user_id>/followers', methods=['GET'])
 @login_required
 def users_followers(user_id):
+    found_user = User.query.get(user_id)
+    total_likes = found_user.total_likes()
     return render_template(
-        'users/followers.html', user=User.query.get(user_id))
+        'users/followers.html', user=found_user, total_likes=total_likes)
 
 
 @app.route('/users/<int:user_id>', methods=["GET"])
 def users_show(user_id):
     found_user = User.query.get(user_id)
-    return render_template('users/show.html', user=found_user)
+    total_likes = found_user.total_likes()
+    return render_template(
+        'users/show.html', user=found_user, total_likes=total_likes)
 
 
+# , total_likes=total_likes
 @app.route('/users/<int:user_id>/edit')
 @login_required
 @ensure_correct_user
