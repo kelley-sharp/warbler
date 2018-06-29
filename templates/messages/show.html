@@ -29,9 +29,16 @@
           </div>
           <p class="single-message">{{ message.text }}</p>
           <span class="text-muted">{{ message.timestamp.strftime('%d %B %Y') }}</span>
+          {% if liked %}
+          <a href="{{url_for( 'toggle_like', user_id=message.user.id, message_id=message.id )}}"><button type="button" class="btn btn-success btn-sm">Like</button></a>
+          {% else %}
+          <a href="{{url_for( 'toggle_like', user_id=message.user.id, message_id=message.id )}}"><button type="button" class="btn btn-outline-success btn-sm">Like</button></a>
+          {% endif %}
         </div>
       </li>
     </ul>
+
   </div>
 </div>
+
 {% endblock %}
