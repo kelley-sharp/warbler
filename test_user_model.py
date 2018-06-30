@@ -28,8 +28,13 @@ class UserModelAttributes(unittest.TestCase):
         db.session.commit()
 
     def tearDown(self):
+        db.session.close()
         db.drop_all()
 
     def test_create_User(self):
         found_user = User.query.filter_by(username="tgif")
         self.assertIsNotNone(found_user)
+
+
+if __name__ == '__main__':
+    unittest.main()

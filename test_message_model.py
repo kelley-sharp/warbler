@@ -21,8 +21,13 @@ class MessageModelAttributes(unittest.TestCase):
         db.session.commit()
 
     def tearDown(self):
+        db.session.close()
         db.drop_all()
 
     def test_create_message(self):
         found_message = Message.query.filter_by(text="Hello Friday")
         self.assertIsNotNone(found_message)
+
+
+if __name__ == '__main__':
+    unittest.main()
