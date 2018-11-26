@@ -158,6 +158,8 @@ nav + .container {
   border-radius: 100%;
   display: block;
   margin-left: -15px;
+  background-size: cover;
+  background-position: center center;
 }
 
 #profile-image {
