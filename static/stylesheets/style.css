@@ -273,7 +273,8 @@ nav + .container {
 #messages .list-group-item {
   display: flex;
   align-items: flex-start;
-  padding: 7px 20px 12px;
+  padding-top: 32px;
+  padding-left: 32px;
 }
 
 #messages:not(.no-hover) .list-group-item:hover {
@@ -531,4 +532,28 @@ nav + .container {
 
 .custom-inner-card * {
   list-style-type: none;
+}
+
+#my-messages-list {
+  margin-top: 68px;
+  margin-left: 125px;
+}
+
+i {
+  padding: 10px;
+  height: 40px;
+  width: 42.5px;
+}
+
+#message-text {
+  margin-top: 5px;
+}
+
+#bio .list-group-item {
+  background-color: #e6ecf0;
+  border: transparent;
+}
+
+#bio-container {
+  border: transparent;
 }

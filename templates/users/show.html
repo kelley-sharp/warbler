@@ -1,6 +1,6 @@
 {% extends 'user_page.html' %}
 {% block user_details %}
-<div class="col-sm-6">
+<div id="my-messages-list" class="col-sm-6">
   <ul class="list-group" id="messages">
     {% for message in user.messages.order_by('timestamp desc') %}
     <li class="list-group-item">
@@ -11,7 +11,7 @@
       <div class="message-area">
         <a href="{{ url_for('users_show', user_id=user.id) }}">@{{ user.username }}</a>
         <span class="text-muted">{{ message.timestamp.strftime('%d %B %Y') }}</span>
-        <p>{{ message.text }}</p>
+        <p id="message-text">{{ message.text }}</p>
       </div>
     </li>
     {% endfor %}
