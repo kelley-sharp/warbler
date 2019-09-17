@@ -6,14 +6,18 @@ A Twitter clone.
 
 ```sh
 # make a virtual environment
-mkvirtualenv warbler
+python3 -m venv venv
+
+# use a virtual environment
+source venv/bin/activate
+
 # install python requirements
 pip install -r requirements.txt
 
 # set up database
 dropdb warbler_db
 createdb warbler_db
-flask db upgrade
+python -m flask db upgrade
 
 # The database must be freshly created before doing this command
 # If you have already added data, make sure to follow the steps above
@@ -21,5 +25,5 @@ flask db upgrade
 python seed.py
 
 # start the server!
-flask run
+python -m flask run
 ```

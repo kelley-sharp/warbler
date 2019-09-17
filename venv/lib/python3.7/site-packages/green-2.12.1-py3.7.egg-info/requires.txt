@@ -1,0 +1,13 @@
+colorama
+coverage
+termstyle
+unidecode
+
+[:python_version=="2.7"]
+backports.shutil_get_terminal_size>=1.0.0
+
+[:python_version=="3.3"]
+backports.shutil_get_terminal_size>=1.0.0
+
+[:sys_platform=="win32"]
+colorama>=0.2.5
