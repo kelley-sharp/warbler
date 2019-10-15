@@ -70,10 +70,9 @@ def users_create():
     form = UserForm()
     if form.validate():
         try:
-            new_user = User(
-                username=form.username.data,
-                email=form.email.data,
-                password=User.hash_password(form.password.data))
+            new_user = User(username=form.username.data,
+                            email=form.email.data,
+                            password=User.hash_password(form.password.data))
             if form.image_url.data:
                 new_user.image_url = form.image_url.data
             if form.bio.data:
@@ -152,8 +151,9 @@ def users_following(user_id):
     """shows list of users that logged in user is following"""
     found_user = User.query.get(user_id)
     total_likes = found_user.total_likes()
-    return render_template(
-        'users/following.html', user=found_user, total_likes=total_likes)
+    return render_template('users/following.html',
+                           user=found_user,
+                           total_likes=total_likes)
 
 
 @app.route('/users/<int:user_id>/followers', methods=['GET'])
@@ -162,8 +162,9 @@ def users_followers(user_id):
     """shows list of users who follow logged in user"""
     found_user = User.query.get(user_id)
     total_likes = found_user.total_likes()
-    return render_template(
-        'users/followers.html', user=found_user, total_likes=total_likes)
+    return render_template('users/followers.html',
+                           user=found_user,
+                           total_likes=total_likes)
 
 
 @app.route('/users/<int:user_id>', methods=["GET"])
@@ -171,8 +172,11 @@ def users_show(user_id):
     """shows user's profile page"""
     found_user = User.query.get(user_id)
     total_likes = found_user.total_likes()
-    return render_template(
-        'users/show.html', user=found_user, total_likes=total_likes)
+    sorted_messages = found_user.messages.order_by(Message.timestamp.desc())
+    return render_template('users/show.html',
+                           user=found_user,
+                           total_likes=total_likes,
+                           sorted_messages=sorted_messages)
 
 
 # , total_likes=total_likes
@@ -256,8 +260,9 @@ def messages_show(user_id, message_id):
     likers = [u.id for u in found_message.liked_by]
     if current_user.id in likers:
         i_like_this = True
-    return render_template(
-        'messages/show.html', message=found_message, liked=i_like_this)
+    return render_template('messages/show.html',
+                           message=found_message,
+                           liked=i_like_this)
 
 
 @app.route('/users/<int:user_id>/messages/<int:message_id>/toggle_like')
@@ -282,8 +287,8 @@ def toggle_like(user_id, message_id):
         url_for('messages_show', message_id=message_id, user_id=user_id))
 
 
-@app.route(
-    '/users/<int:user_id>/messages/<int:message_id>', methods=["DELETE"])
+@app.route('/users/<int:user_id>/messages/<int:message_id>',
+           methods=["DELETE"])
 @login_required
 @ensure_correct_user
 def messages_destroy(user_id, message_id):
