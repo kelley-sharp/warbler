@@ -47,9 +47,6 @@
           <a href="{{ url_for('users_show', user_id=message.user.id) }}">@{{ message.user.username }}</a>
           <span class="text-muted">{{ message.timestamp.strftime('%d %B %Y') }}</span>
           <p>{{ message.text }}</p>
-          <a href="{{url_for('root')}}"><button>
-            Like
-          </button></a>
         </div>
       </li>
       {% endfor %}
