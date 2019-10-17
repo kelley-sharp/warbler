@@ -1,6 +1,6 @@
 # Warbler
 
-A Twitter clone! Check it out [here]("https://ks-warbler.herokuapp.com/").
+A Twitter clone! Check it out [here](https://ks-warbler.herokuapp.com/).
 
 ## Key Features
 
