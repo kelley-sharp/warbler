@@ -4,8 +4,8 @@ A Twitter clone!
 
 ## Key Features
 
-*User can create and edit their profile.
-*User can follow other users and like their posts.
+* User can create and edit their profile.
+* User can follow other users and like their posts.
 
 ### Installation
 
